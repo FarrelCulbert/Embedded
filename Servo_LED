@@ -1,0 +1,38 @@
+#include <Servo.h>
+
+Servo myServo;  // Membuat objek servo untuk mengontrol motor servo
+int ldrPin = A0; // Pin tempat LDR terhubung
+int ldrValue; // Nilai yang dibaca dari LDR
+int servoPos; // Posisi servo motor
+int ledPin1 = 2; // Pin untuk LED pertama
+int ledPin2 = 3; // Pin untuk LED kedua
+int ledPin3 = 4; // Pin untuk LED ketiga
+
+void setup() {
+  myServo.attach(9);  // Menghubungkan servo motor ke pin digital 9
+  pinMode(ledPin1, OUTPUT); // Mengatur pin LED pertama sebagai output
+  pinMode(ledPin2, OUTPUT); // Mengatur pin LED kedua sebagai output
+  pinMode(ledPin3, OUTPUT); // Mengatur pin LED ketiga sebagai output
+}
+
+void loop() {
+  ldrValue = analogRead(ldrPin); // Membaca nilai dari LDR
+  servoPos = map(ldrValue, 0, 1023, 0, 180); // Memetakan nilai LDR ke posisi servo (0-180 derajat)
+  myServo.write(servoPos); // Menggerakkan servo motor sesuai dengan posisi yang dihitung
+  delay(15); // Delay untuk memberi waktu servo motor untuk mencapai posisi yang diinginkan
+
+  // Mengontrol LED berdasarkan posisi servo
+  if (servoPos < 60) {
+    digitalWrite(ledPin1, HIGH);
+    digitalWrite(ledPin2, LOW);
+    digitalWrite(ledPin3, LOW);
+  } else if (servoPos >= 60 && servoPos < 120) {
+    digitalWrite(ledPin1, LOW);
+    digitalWrite(ledPin2, HIGH);
+    digitalWrite(ledPin3, LOW);
+  } else {
+    digitalWrite(ledPin1, LOW);
+    digitalWrite(ledPin2, LOW);
+    digitalWrite(ledPin3, HIGH);
+  }
+}
