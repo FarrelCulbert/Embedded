@@ -1,0 +1,57 @@
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+#define BLYNK_AUTH_TOKEN "H01SF8ZWZ_LKZLf-LR34ENmQbBDwWURF"
+#define WIFI_SSID "Kontrakan ITTS"
+#define WIFI_PASS "kontrakan_itts"
+
+OneWire oneWire(2);
+DallasTemperature sensors(&oneWire);
+DeviceAddress sensorAddress;
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+byte customDegreeSymbol[8] = { //8X5
+  B01100,
+  B10010,
+  B10010,
+  B01100,
+  B00000,
+  B00000,
+  B00000,
+  B00000
+};
+
+void setup() {
+  Serial.begin(9600);
+  Blynk.begin(BLYNK_AUTH_TOKEN, WIFI_SSID, WIFI_PASS);
+  sensors.begin();
+  sensors.getAddress(sensorAddress, 0);
+  sensors.setResolution(sensorAddress, 10);
+  lcd.begin();
+  lcd.createChar(0, customDegreeSymbol); // Membuat karakter khusus derajat
+  lcd.backlight();
+}
+
+void loop() {
+  Blynk.run();
+  sensors.requestTemperatures();
+  float suhu = sensors.getTempC(sensorAddress);
+
+  Serial.print("Suhu air: ");
+  Serial.print(suhu);
+  Serial.println(" °C");
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Suhu: ");
+  lcd.print(suhu);
+  lcd.write(0); // Menampilkan karakter khusus derajat
+  lcd.print("C");
+
+  Blynk.virtualWrite(V0, suhu); // Mengirim data suhu ke pin V0 di Blynk
+  delay(1000);
+}
