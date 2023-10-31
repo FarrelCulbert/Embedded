@@ -1,0 +1,56 @@
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+void setup() {
+  Serial.begin(9600);
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { //Alamat OLED
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Jangan lanjutkan, lakukan loop selamanya
+  }
+}
+
+void loop() {
+  display.clearDisplay();
+  display.setTextSize(1); // Instruksi mengatur ukuran karakter
+  display.setTextColor(WHITE); // Instruksi untuk mengatur warna
+  display.setCursor(20, 0); // Karakter dimulai dari kolom 20 baris 0
+  display.print("EE0401"); // Menampilkan karakter "Teknik" pada OLED
+  display.setCursor(40, 20); // Karakter dimulai dari kolom 20 baris 0
+  display.print("Elektro");
+  display.setCursor(20, 50); // Karakter dimulai dari kolom 20 baris 0
+  display.print("ITTS");
+  display.display();
+  delay(1000);
+  display.clearDisplay();
+  display.setTextSize(1); // Instruksi mengatur ukuran karakter
+  display.setTextColor(WHITE); // Instruksi untuk mengatur warna
+  display.setCursor(45, 0); // Karakter dimulai dari kolom 20 baris 0
+  display.print("EE0401"); // Menampilkan karakter "Teknik" pada OLED
+  display.setCursor(60, 20); // Karakter dimulai dari kolom 20 baris 0
+  display.print("Elektro");
+  display.setCursor(55, 50); // Karakter dimulai dari kolom 20 baris 0
+  display.print("ITTS");
+  display.display();
+  delay(1000);
+  display.clearDisplay();
+  display.setTextSize(1); // Instruksi mengatur ukuran karakter
+  display.setTextColor(WHITE); // Instruksi untuk mengatur warna
+  display.setCursor(80, 0); // Karakter dimulai dari kolom 20 baris 0
+  display.print("EE0401"); // Menampilkan karakter "Teknik" pada OLED
+  display.setCursor(85, 20); // Karakter dimulai dari kolom 20 baris 0
+  display.print("Elektro");
+  display.setCursor(95, 50); // Karakter dimulai dari kolom 20 baris 0
+  display.print("ITTS");
+  display.display();
+  delay(1000);
+
+}
