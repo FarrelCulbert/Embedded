@@ -1,0 +1,34 @@
+#include <SPI.h> //Library SPI
+#include <Wire.h> //Library Wire
+#include <Adafruit_GFX.h> //Library GFX
+#include <Adafruit_SSD1306.h> //Library OLED SSD1306
+#define SCREEN_WIDTH 128 //Panjang LCD OLED
+#define SCREEN_HEIGHT 64 //Tinggi LCD OLED
+#define OLED_RESET -1 //Pin reset terhubung dengan arduino
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, 
+OLED_RESET);
+int analog_IN = A0; 
+void setup() {
+Serial.begin(9600);
+if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { //Alamat OLED
+Serial.println(F("SSD1306 allocation failed"));
+for(;;); // Don't proceed, loop forever
+}
+pinMode(analog_IN,INPUT);
+}
+void loop() {
+int Nilai_LDR = analogRead(analog_IN);
+Serial.print("Nilai LDR:");
+Serial.println(Nilai_LDR);
+display.clearDisplay();
+display.setTextSize(2); //Instruksi mengatur ukuran karakter
+display.setTextColor(WHITE); //Instruksi untuk mengatur warna
+display.setCursor(20,0); //Karakter dumulai dari kolom 20 baris 0
+display.print("Nilai LDR"); //menampilkan karakter "Nilai LDR" pada OLED
+display.setTextSize(2); //Instruksi mengatur ukuran karakter
+display.setTextColor(WHITE); //Instruksi untuk mengatur warna
+display.setCursor(40,20); //Karakter dumulai dari kolom 40 baris 20
+display.print(Nilai_LDR); //menampilkan nilai sensor pada OLED
+display.display();
+delay(2000);
+}
