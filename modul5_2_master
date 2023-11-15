@@ -1,0 +1,45 @@
+#include <Wire.h>
+
+#define TRIGGER_PIN D7
+#define ECHO_PIN D6
+
+void setup() {
+  Serial.begin(9600);
+  Wire.begin();
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+}
+
+void loop() {
+  // Mengirim sinyal ultrasonik
+  digitalWrite(TRIGGER_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN, LOW);
+
+  // Menerima waktu pantulan ultrasonik
+  long duration = pulseIn(ECHO_PIN, HIGH);
+
+  // Menghitung jarak berdasarkan waktu yang diukur
+  int distance = duration * 0.034 / 2;
+
+  //Serial.println(distance);
+
+  // Mengonversi nilai jarak ke dalam bentuk string
+  String distanceStr = "Nilai Ultrasonic " + String(distance);
+
+  // Kirim
+  Wire.beginTransmission(9);
+  Wire.write(distanceStr.c_str());
+  Wire.endTransmission();
+
+  // Terima data dari slave
+  Wire.requestFrom(9, 13);
+  while (Wire.available()) {
+    char c = Wire.read();
+    Serial.print(c);
+  }
+  Serial.println();
+  delay(200);
+}
