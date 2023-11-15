@@ -1,0 +1,40 @@
+#include <Wire.h>
+
+const int LDRPin = A0;
+
+int ldrValue;
+
+void setup() {
+  Wire.begin(9);                /* join i2c bus with address 8 */
+  Wire.onReceive(receiveEvent); /* register receive event */
+  Wire.onRequest(requestEvent); /* register request event */
+  Serial.begin(115200);         /* start serial for debug */
+}
+
+void loop() {
+  ldrValue = analogRead(LDRPin); // Membaca nilai dari sensor LDR
+  //Serial.println(ldrValue);
+
+  delay(100);
+}
+
+// function that executes whenever data is received from master
+void receiveEvent(int howMany) {
+  while (Wire.available() > 0) {
+    char c = Wire.read(); /* receive byte as a character */
+    Serial.print(c);
+  }
+  Serial.println(); /* to newline */
+}
+
+// function that executes whenever data is requested from master
+void requestEvent() {
+  // Convert int to String
+  String ldrString = "Nilai LDR " + String(ldrValue);
+  
+  // Convert String to char array
+  const char* ldrCharArray = ldrString.c_str();
+  
+  // Send the char array over I2C
+  Wire.write(ldrCharArray);
+}
