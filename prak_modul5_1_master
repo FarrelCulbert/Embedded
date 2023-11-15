@@ -1,0 +1,22 @@
+#include <Wire.h>
+
+void setup(){
+  Serial.begin(9600);
+  Wire.begin();
+}
+
+void loop() {
+  //Kirim
+  Wire.beginTransmission(9);
+  Wire.write("kelompok 1");              
+  Wire.endTransmission();
+
+  //Terima
+  Wire.requestFrom(9,22);
+  while(Wire.available()){
+    char c = Wire.read();
+    Serial.print(c);
+  }
+  Serial.println();
+  delay(200);
+}
